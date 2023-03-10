@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "django-template"
+version = "0.1.0"
+description = ""
+authors = ["Brandon White <bwhite@infoxchange.org>"]
+readme = "README.md"
+packages = [{include = "template"}]
+
+[tool.poetry.dependencies]
+python = "~3.9.0"
+celery = ">=5.0,<6"
+django-celery-results = "*"
+django-celery-beat = "*"
+dj-database-url = "*"
+Django = "4.1.7"
+django-debug-toolbar = "*"
+django-extensions = "*"
+packaging = "*"
+django-filter = "*"
+django-localflavor = "*"
+django-split-settings = "*"
+djangorestframework = "*"
+drf-spectacular = "*"
+furl = "*"
+newrelic = "*"
+python-memcached = "*"
+sentry-sdk = "*"
+raven = "*"
+requests = "*"
+responses = "*"
+gunicorn = "*"
+psycopg2-binary = "*"
+django-health-check = "*"
+django-stubs = "1.9.0"
+django-cors-headers = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

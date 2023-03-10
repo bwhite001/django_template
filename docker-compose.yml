@@ -1,0 +1,71 @@
+version: '2'
+
+services:
+    app:
+        build:
+            context: .
+        command: ./manage.py runserver_plus --keep-meta-shutdown 0.0.0.0:8000
+        env_file: .env
+        ports:
+            - '127.0.0.1:8000:8000'
+        volumes:
+            - .:/app
+            - /etc/localtime:/etc/localtime:ro
+        depends_on:
+            - mailhog
+            - db
+            - amqp
+            - memcached
+
+    amqp:
+        image: rabbitmq:management
+        ports:
+            - '127.0.0.1:15672:15672'
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+
+    flower:
+        # Accessible via localhost:5555
+        # default auth is root/changeit
+        image: totem/celery-flower-docker
+        command: ["sh", "-c", "until curl -s -f http://$$AMQP_HOST:15672 > /dev/null; do sleep 1; done; /usr/bin/dumb-init /opt/celery-flower/bin/flower.sh"]
+        ports:
+            - '127.0.0.1:5555:5555'
+        depends_on:
+            - amqp
+        environment:
+            AMQP_HOST: amqp
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+
+    worker:
+        build:
+          context: .
+        command: celery -A app_worker worker --beat -l debug
+        depends_on:
+            - amqp
+        env_file: .env
+        volumes:
+            - .:/app
+            - ./storage:/storage
+            - /etc/localtime:/etc/localtime:ro
+
+    memcached:
+        image: library/memcached
+
+    db:
+        image: postgres:11
+        environment:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: spud_api
+        volumes:
+            - db_data:/var/lib/postgresql/data
+            - /etc/localtime:/etc/localtime:ro
+
+    mailhog:
+        image: mailhog/mailhog
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+
+volumes:
+    db_data:

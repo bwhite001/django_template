@@ -29,10 +29,10 @@ RUN set -ex \
     && printf "# pylint: skip-file\n\n__version__ = \"%s\"\n" "${VERSION}" > ${DJANGO_PATH}/__version__.py \
     && pip3 install --no-cache-dir poetry \
     && pip3 freeze \
-    && ./app.sh dep-install \
+    && ./docker/app.sh dep-install \
     && apt-get purge -y --auto-remove "${buildDeps[@]}" \
     && rm -rf /var/lib/apt/lists/* \
-    && ./app.sh build
+    && ./docker/app.sh build
 
 ENTRYPOINT ["./entrypoint.sh"]
 

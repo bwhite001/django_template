@@ -5,7 +5,7 @@ VIRTUALENV_BASE="${VIRTUALENV_BASE:-/virtualenv}"
 
 case "$1" in
     build)
-        . ./app.sh start-env
+        . ./docker/app.sh start-env
         ./manage.py collectstatic --noinput
         ;;
 
@@ -16,17 +16,17 @@ case "$1" in
         ;;
 
     lint)
-        . ./app.sh start-env
+        . ./docker/app.sh start-env
         pre-commit run --all-files
         ;;
 
     dep-install)
-        . ./app.sh start-env
+        . ./docker/app.sh start-env
         poetry install --no-dev --no-interaction
         ;;
 
     dep-graph)
-        . ./app.sh start-env
+        . ./docker/app.sh start-env
         poetry show --tree
         ;;
 

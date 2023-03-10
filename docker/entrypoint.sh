@@ -34,12 +34,12 @@ export NEW_RELIC_CONFIG_FILE=configs/newrelic.ini
 export SSL_CA_FILE=/etc/ssl/certs/ca-certificates.crt
 export REQUESTS_CA_BUNDLE="$SSL_CA_FILE"
 
-. ./app.sh start-env
+. ./docker/app.sh start-env
 
 case "$1" in
     deploy)
         shift
-        exec ./app.sh deploy
+        exec ./docker/app.sh deploy
         ;;
 
     serve)
@@ -49,12 +49,12 @@ case "$1" in
 
     test)
         shift
-        exec ./entrypoint.sh lint
-        exec ./entrypoint.sh unit-tests "$@"
+        exec ./docker/entrypoint.sh lint
+        exec ./docker/entrypoint.sh unit-tests "$@"
         ;;
 
     lint)
-        exec ./app.sh lint
+        exec ./docker/app.sh lint
         ;;
 
     unit-tests)
